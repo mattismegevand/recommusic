@@ -1,90 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Review</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        .card-img-top {
-            width: 100%;
-            height: 15vw;
-            object-fit: cover;
-        }
-    </style>
 </head>
-
 <body>
     {% include 'navbar.html' %}
 
-    {% block content %}
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- Review info -->
-            <div class="col-lg-5">
-                <div class="card mb-5 shadow-sm">
-                    <img class="card-img-top" src="{{ review.album_art_url }}" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ review.artist }} - {{ review.album }}</h5>
-                        <p class="card-text">{{ review.review }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">
-                                    {% for i in range(5) %}
-                                    {% if i < review.rating//2 %} &#9733; <!-- Filled star for each point of rating -->
-                                        {% else %}
-                                        &#9734; <!-- Unfilled star for each remaining point up to 5 -->
-                                        {% endif %}
-                                        {% endfor %}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Spacer Column -->
-            <div class="col-lg-1"></div>
-
-            <!-- Similar Albums -->
-            <div class="col-lg-3">
-                <h5 class="mb-5">Similar Albums:</h5>
-                {% for album in similar_albums %}
-                <div class="card mb-5 shadow-sm">
-                    <img class="card-img-top" src="{{ album.album_art_url }}" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ album.artist }} - {{ album.album }}</h5>
-                        <p class="card-text">{{ album.small_text }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="{{ url_for('review', artist=album.artist, album=album.album) }}"
-                                    class="btn btn-sm btn-outline-secondary">View</a>
-                            </div>
-                            <small class="text-muted">{{ album.rating }} Stars</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            {% for i in range(5) %}
-                            {% if i < album.rating//2 %} &#9733; <!-- Filled star for each point of rating -->
-                                {% else %}
-                                &#9734; <!-- Unfilled star for each remaining point up to 5 -->
-                                {% endif %}
-                                {% endfor %}
-                        </small>
-                    </div>
-                </div>
-                {% endfor %}
+    <div class="container">
+        <!-- Review info -->
+        <div class="review-section">
+            <img class="review-image" src="{{ review.album_art_url }}" alt="Album image">
+            <div>
+                <h2>{{ review.artist }} - {{ review.album }}</h2>
+                <h4>Genre: {{ review.genre }}</h4>
+                <h4>Rating: {{ '%.1f' | format(review.rating) }}</h4>
+                <p>{{ review.review }}</p>
             </div>
         </div>
+
+        <!-- Similar Albums -->
+        <h2>Similar Albums:</h2>
+        <div class="similar-albums">
+            {% for album in similar_albums %}
+                <div class="similar-album">
+                    <img class="similar-image" src="{{ album.album_art_url }}" alt="Similar Album image">
+                    <div>
+                        <h3>{{ album.artist }} - {{ album.album }}</h3>
+                        <h4>Genre: {{ album.genre }}</h4>
+                        <h4>Rating: {{ '%.1f' | format(album.rating) }}</h4>
+                        <p>{{ album.small_text }}</p>
+                        <center><a href="/review/{{ album['artist'] }}/{{ album['album'] }}" class="btn">Read Full Review</a></center>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endblock %}
 
     {% include 'footer.html' %}
 </body>
-
 </html>

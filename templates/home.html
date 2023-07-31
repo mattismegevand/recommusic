@@ -1,47 +1,33 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
   <title>Album Reviews</title>
 </head>
-
 <body>
   {% include 'navbar.html' %}
-  <div class="container-fluid py-5">
-    <div class="row">
-      {% for review in reviews %}
-      <div class="col-lg-4 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="{{ review['album_art_url'] }}" alt="Album art for {{ review['album'] }}"
-            style="width: 100%; height: 15vw; object-fit: cover;">
-          <div class="card-body">
-            <h5 class="card-title">{{ review['album'] }}</h5>
-            <p class="card-text">{{ review['small_text'] }}</p>
-            <a href="/review/{{ review['artist'] }}/{{ review['album'] }}" class="btn btn-primary">Read Full Review</a>
-          </div>
+  <div class="home-card-container">
+    {% for review in reviews %}
+      <div class="home-card">
+        <img src="{{ review['album_art_url'] }}" alt="Album art for {{ review['album'] }}" class="home-card-image">
+        <div class="home-card-content">
+          <h5>{{ review['artist'] }} - {{ review['album'] }}</h5>
+          <p>{{ review['small_text'] }}</p>
+          <a href="/review/{{ review['artist'] }}/{{ review['album'] }}" class="btn">Read Full Review</a>
         </div>
       </div>
-      {% endfor %}
-    </div>
-    <div class="d-flex justify-content-between my-4">
-      {% if prev_url %}
-      <a href="{{ prev_url }}" class="btn btn-outline-primary">Previous</a>
-      {% else %}
-      <span></span> <!-- placeholder for correct spacing -->
-      {% endif %}
-      {% if next_url %}
-      <a href="{{ next_url }}" class="btn btn-outline-primary">Next</a>
-      {% endif %}
-    </div>
-    {% include 'footer.html' %}
+    {% endfor %}
   </div>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <div class="pagination">
+    {% if prev_url %}
+      <a href="{{ prev_url }}" class="btn">Previous</a>
+    {% endif %}
+    {% if next_url %}
+      <a href="{{ next_url }}" class="btn">Next</a>
+    {% endif %}
+  </div>
+  {% include 'footer.html' %}
 </body>
-
 </html>

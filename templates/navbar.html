@@ -1,11 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{{ url_for('home') }}">Album Reviews</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-    </ul>
+<header>
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f8f9fa;">
+    <a style="font-family: 'Courier New', Courier, monospace; font-size: 20px; text-decoration: none; color: black;" href="{{ url_for('home') }}"><b>recommusic</b></a>
     {% include 'search_bar.html' %}
   </div>
-</nav>
+</header>
