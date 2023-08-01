@@ -1,50 +1,50 @@
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import pickle
 import sqlite3
 
+embeddings = np.load('embeddings.npy')
+
 def get_db():
-  conn = sqlite3.connect('../pitchfork/reviews.db')
+  conn = sqlite3.connect('reviews.db')
   conn.row_factory = sqlite3.Row  # This allows access to column by name
   return conn
 
-def load_embeddings():
-  with open('embeddings.pkl', 'rb') as f:
-    data = pickle.load(f)
-  return data
+def select_album(id):
+  cur = get_db().cursor()
+  cur.execute('SELECT * FROM reviews WHERE id = ?', (id,))
+  return cur.fetchone()
 
-def get_similar_albums(target_embedding, artist, album, n_similar=9):
-  # Load embeddings
-  with open('embeddings.pkl', 'rb') as f:
-    data = pickle.load(f)
+def select_a_col(col):
+  cur = get_db().cursor()
+  cur.execute(f"SELECT {col} FROM reviews")
+  rows = cur.fetchall()
+  return [row[col] for row in rows]
 
-  embeddings = data['embeddings']
-  albums = data['albums']
-  artists = data['artists']
+def get_similar_albums(id_embedding, n_similar=9):
+  album = select_album(id_embedding)
+  ratings = np.array(select_a_col('rating'))
+  artist_sims = np.array([1 if a == album['artist'] else 0 for a in select_a_col('artist')])
+  labels_sims = np.array([1 if a == album['label'] else 0 for a in select_a_col('label')])
+  genres_sims = np.array([1 if a == album['genre'] else 0 for a in select_a_col('genre')])
+  year_sims = np.array([1 / (abs(a - album['year_released']) + 1) for a in select_a_col('year_released')])
 
-  # Calculate cosine similarities
-  similarities = cosine_similarity([target_embedding], embeddings)[0]
+  similarities = cosine_similarity([embeddings[id_embedding]], embeddings).flatten()
+  similarities *= (ratings / 10)
+  similarities += artist_sims + labels_sims + genres_sims + year_sims
 
-  # Get indices of albums sorted by similarity
   sorted_indices = np.argsort(similarities)[::-1]
 
-  # Get details of similar albums
   similar_albums = []
   for idx in sorted_indices:
-    # Exclude the album itself
-    if artists[idx] == artist and albums[idx] == album:
+    # exclude the album itself
+    if idx == id_embedding - 1:
       continue
 
-    # Fetch album details from database
     cur = get_db().cursor()
-    cur.execute(
-      "SELECT * FROM reviews WHERE artist = ? AND album = ?",
-      (artists[idx], albums[idx])
-    )
+    cur.execute(f"SELECT * FROM reviews WHERE id = {idx + 1}")
+
     album_details = cur.fetchone()
-
     similar_albums.append(album_details)
-
     if len(similar_albums) == n_similar:
       break
 
