@@ -42,17 +42,27 @@ body {
 
 .review-section {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 2em;
+    justify-content: center;
+}
+
+.review-text {
+    margin-left: 2em;
 }
 
 .review-image {
-    width: 60%;
+    width: 30%;
     height: auto;
     object-fit: cover;
 }
 
+.scrollable-content {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 1em;
+}
 .similar-albums {
     display: flex;
     flex-wrap: wrap;
@@ -60,19 +70,29 @@ body {
 }
 
 .similar-album {
+    display: flex;
     width: 30%;
     border: 1px solid #ccc;
     margin-bottom: 1em;
     padding: 1em;
     box-sizing: border-box;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.album-info {
+    margin-left: 1em;
+    flex: 1;
+    word-wrap: break-word;
 }
 
 .similar-image {
-    width: 100%;
+    width: 150px;
     height: auto;
     object-fit: cover;
     margin-bottom: 1em;
 }
+
 
 .search-results {
     display: flex;
