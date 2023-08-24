@@ -25,34 +25,6 @@ When a user views an album, the application calculates the similarity score base
 
 The application then presents the most similar albums to the user based on this combined score.
 
-## Setup & Installation
-
-1. Clone the repository.
-
-```bash
-git clone https://github.com/your-github-username/music-recommendation-engine.git
-```
-
-2. Navigate to the project directory.
-
-```bash
-cd music-recommendation-engine
-```
-
-3. Install the required packages.
-
-```bash
-pip install -U scikit-learn numpy flask
-```
-
-4. Run the application.
-
-```bash
-python web_app
-```
-
-The application will be accessible at `http://127.0.0.1:5000`.
-
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
